@@ -42,6 +42,11 @@ while len(리스트) != 0
             
 return 0 (깔 수 있는 돗자리가 없음)
 """
+def possibleLength(li, cnt):
+    li_str = "".join(li)
+
+    return ("-1"*cnt in li_str)
+
 
 def solution(mats, park):
     answer = 0 # 반환값 초기화
@@ -50,32 +55,22 @@ def solution(mats, park):
     for mat in mats:
         if mat > min(rows, cols): mats.remove(mat) # park보다 큰 돗자리는 제외
     
-    while (len(mats) != 0): # 모든 매트의 경우의 수를 봄
-        answer = max(mats)  # 가장 큰 매트부터
+    while len(mats) != 0:
+        answer = max(mats)
         
-        idxr = 0            # 행 별로 확인
-        while idxr < rows:
-            idxc = park[idxr].index("-1") # -1 시작 인덱스 찾음 (idxr, idxc)
-            
-            # 남은 길이가 지금 확인하는 변 길이보다 짧은 경우, 다른 행에서 재진행
-            if ((rows-idxr) - answer) < 0 or ((cols-idxc) - answer) < 0:
-                idxr += 1
-                continue   
-            
-            for i in range(answer):  # answer x answer 돗자리 가능 여부 확인
-                check = [col[idxc] for col in park[idxr:idxr+answer]]   # 찾은 위치의 열을 길이만큼 가져옴
-                if check.count("-1") >= answer:                         # 모두 -1이면 돗자리 가능 여부 존재
-                    if (i == answer - 1): return answer                 # answer 길이만큼 가능함, 답 반환
-                    
-                    idxc += 1                           # 다음 열 확인
-                    if (cols-idxc) - answer < 0 : break # index 벗어났으면 break
-                    continue
-                else:
-                    park[idxr][idxc-i] = "X"            # -1이 아닌 곳이 존재하므로, 처음 시작한 인덱스의 -1을 X표시로 바꿈
+        rcnt = 0
+        for r in range(rows):
+            if possibleLength(park[r], answer):
+                rcnt += 1
+                if rcnt == answer: return answer
+                continue
+            else:
+                rcnt = 0
+                if (rows - r -1 < answer):
+                    mats.remove(answer)
                     break
-                
-        mats.remove(answer)
-        
+                continue
+
     return 0
 
 
