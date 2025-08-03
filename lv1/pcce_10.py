@@ -18,6 +18,33 @@ park[i][j]에 돗자리를 깐 사람이 없다면 "-1",
 사람이 있다면 알파벳 한 글자로 된 값을 갖습니다.
 """
 
+"""
+rows, cols 값 해놓음 (각각 len(park), len(park[0]))
+min(rows, cols)보다 큰 값 제외 (공원 크기보다 큼)
+
+정제된 리스트로 진행
+리스트 내 원소가 다 없어질 때까지 큰 값부터 비교
+-1 시작 인덱스 찾아서 변의 길이만큼 열을 슬라이싱하여 -1 개수가 변의길이만큼 되는지 확인하는 작업을 행 내에서 변의 길이만큼 반복 진행
+
+의사코드
+while len(리스트) != 0
+    answer = max(리스트)
+    -1 시작 인덱스 찾음 (idxr, idxc)
+    for i in range(answer)
+        park[idxr][idxc:idxc+ansxer-1].count("-1")이 answer보다 크거나 같은지 확인
+            충족 시 idxr+1 후 다음 열 재확인 (continue)
+                만약 i == answer -1 이라면, return answer
+            미충족 시 e다시 -1 시작 인덱스 찾기 (break)
+    
+    리스트.remove(ansewer값)
+            
+return 0 (깔 수 있는 돗자리가 없음)
+"""
+
+def solution(mats, park):
+    answer = 0
+    return answer
+
 m = [5, 3, 2]
 p = [["A", "A", "-1", "B", "B", "B", "B", "-1"],
      ["A", "A", "-1", "B", "B", "B", "B", "-1"],
@@ -26,6 +53,4 @@ p = [["A", "A", "-1", "B", "B", "B", "B", "-1"],
      ["D", "D", "-1", "-1", "-1", "-1", "-1", "F"],
      ["D", "D", "-1", "-1", "-1", "-1", "E", "-1"]]
 
-def solution(mats, park):
-    answer = 0
-    return answer
+print(f"결과: {solution(m, p)}")
