@@ -34,7 +34,9 @@ while len(리스트) != 0
         park[idxr][idxc:idxc+ansxer-1].count("-1")이 answer보다 크거나 같은지 확인
             충족 시 idxr+1 후 다음 열 재확인 (continue)
                 만약 i == answer -1 이라면, return answer
-            미충족 시 e다시 -1 시작 인덱스 찾기 (break)
+            미충족 시 
+                idxr-i-1, idxc X로 표시,
+                다시 -1 시작 인덱스의 idxc 찾도록 함(break)
     
     리스트.remove(ansewer값)
             
@@ -42,8 +44,9 @@ return 0 (깔 수 있는 돗자리가 없음)
 """
 
 def solution(mats, park):
-    answer = 0
-    return answer
+    answer = 0        
+    return 0
+
 
 m = [5, 3, 2]
 p = [["A", "A", "-1", "B", "B", "B", "B", "-1"],
