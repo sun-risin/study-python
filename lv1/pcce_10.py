@@ -20,58 +20,46 @@ park[i][j]에 돗자리를 깐 사람이 없다면 "-1",
 
 """
 rows, cols 값 해놓음 (각각 len(park), len(park[0]))
-min(rows, cols)보다 큰 값 제외 (공원 크기보다 큼)
+min(rows, cols)보다 큰 값 mats에서 제외 (공원 크기보다 큼)
 
-정제된 리스트로 진행
-리스트 내 원소가 다 없어질 때까지 큰 값부터 비교
--1 시작 인덱스 찾아서 변의 길이만큼 열을 슬라이싱하여 -1 개수가 변의길이만큼 되는지 확인하는 작업을 행 내에서 변의 길이만큼 반복 진행
-
-의사코드
-while len(리스트) != 0
-    answer = max(리스트)
-    -1 시작 인덱스 찾음 (idxr, idxc)
-    for i in range(answer)
-        park[idxr][idxc:idxc+ansxer-1].count("-1")이 answer보다 크거나 같은지 확인
-            충족 시 idxr+1 후 다음 열 재확인 (continue)
-                만약 i == answer -1 이라면, return answer
-            미충족 시 
-                idxr-i-1, idxc X로 표시,
-                다시 -1 시작 인덱스의 idxc 찾도록 함(break)
-    
-    리스트.remove(ansewer값)
-            
-return 0 (깔 수 있는 돗자리가 없음)
+-1의 길이가 돗자리 크기인 곳이 존재하는 행일 때, 그 시작위치를 알아냄
+    해당 행에서 +돗자리크기-1 위치의 행까지 같은 시작위치에서 돗자리 크기만큼 모두 -1이라면 True
+    아니라면 원래 위치 X로 표시 후 다시 첫 줄을 진행
+전체 park를 다 봐도 가능하지 않다면 해당 크기는 mats에서 제외
 """
-def possibleLength(li, cnt):
-    li_str = "".join(li)
 
-    return ("-1"*cnt in li_str)
+def possibleLength(li, cnt, park, row): # cnt 길이 돗자리 li에 가능 여부
+    li_str = "".join(li)
+    cols = len(park[0])
+    
+    if ("-1"*cnt in li_str):
+        for c in range(cols):
+            check = [col[c] for col in park[row:]]
+            if (("-1"*cnt) in "".join(check)): return True
+            else: return False
+    else:
+        return False 
 
 
 def solution(mats, park):
     answer = 0 # 반환값 초기화
     
     rows, cols = len(park), len(park[0]) # park의 행과 열 길이
-    for mat in mats:
-        if mat > min(rows, cols): mats.remove(mat) # park보다 큰 돗자리는 제외
-    
-    while len(mats) != 0:
-        answer = max(mats)
+    mats = [mat for mat in mats if mat <= min(rows, cols)]
+
+    while len(mats) != 0:  # 모든 돗자리 확인
+        answer = max(mats) # 큰 돗자리부터
         
-        rcnt = 0
         for r in range(rows):
-            if possibleLength(park[r], answer):
-                rcnt += 1
-                if rcnt == answer: return answer
-                continue
+            if possibleLength(park[r], answer, park, r):
+                return answer
             else:
-                rcnt = 0
                 if (rows - r -1 < answer):
                     mats.remove(answer)
                     break
                 continue
 
-    return 0
+    return -1
 
 
 m = [5, 3, 2]
