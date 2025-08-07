@@ -24,40 +24,44 @@ min(rows, cols)보다 큰 값 mats에서 제외 (공원 크기보다 큼)
 
 -1의 길이가 돗자리 크기인 곳이 존재하는 행일 때, 그 시작위치를 알아냄
     해당 행에서 +돗자리크기-1 위치의 행까지 같은 시작위치에서 돗자리 크기만큼 모두 -1이라면 True
-    아니라면 원래 위치 X로 표시 후 다시 첫 줄을 진행
+    아니라면 원래 위치 X로 표시 후 다시 동일 행 내에서 첫 줄을 진행 (행 내 -1 길이가 돗자리크기인 곳이 없을 때까지)
 전체 park를 다 봐도 가능하지 않다면 해당 크기는 mats에서 제외
 """
 
-def possibleLength(li, cnt, park, row): # cnt 길이 돗자리 li에 가능 여부
-    li_str = "".join(li)
-    cols = len(park[0])
-    
-    if ("-1"*cnt in li_str):
-        for c in range(cols):
-            check = [col[c] for col in park[row:]]
-            if (("-1"*cnt) in "".join(check)): return True
-            else: return False
-    else:
-        return False 
+"""
+any() : 하나라도 True인게 있으면 True
+all() : 모두 True여야 True 반환
+"""
+
+def possibleLength(r, cnt, park): # cnt 길이 돗자리 가능 여부 알아보기
+    p_row = park[r]
+    p_col = len(p_row)
+
+    for start_col in range(p_col - cnt + 1):  # 가능한 시작 열만 탐색
+        ok = True
+        # 첫 줄부터 cnt줄까지 확인
+        for i in range(r, r + cnt):
+            if any(park[i][j] != "-1" for j in range(start_col, start_col + cnt)): # 하나라도 -1 아닌 곳 있으면 X
+                ok = False
+                break
+        if ok: return True
+
+    return False
 
 
 def solution(mats, park):
     answer = 0 # 반환값 초기화
     
     rows, cols = len(park), len(park[0]) # park의 행과 열 길이
-    mats = [mat for mat in mats if mat <= min(rows, cols)]
+    for mat in mats:
+        if mat > min(rows, cols): mats.remove(mat) # park보다 큰 돗자리는 제외
+    
+    while mats:
+        answer = max(mats)
 
-    while len(mats) != 0:  # 모든 돗자리 확인
-        answer = max(mats) # 큰 돗자리부터
-        
-        for r in range(rows):
-            if possibleLength(park[r], answer, park, r):
-                return answer
-            else:
-                if (rows - r -1 < answer):
-                    mats.remove(answer)
-                    break
-                continue
+        for r in range(rows - answer + 1):  # 시작 행, 남은 행 개수가 돗자리 길이보다 짧기 전까지
+            if possibleLength(r, answer, park): return answer
+        mats.remove(answer)
 
     return -1
 
