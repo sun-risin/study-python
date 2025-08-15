@@ -69,13 +69,16 @@ def gift_idx(give):  # 선물 지수 구한 후 give 내 본인 인덱스에 저
         give[i][i] = giving_sum - receive_sum
         
 
-def cal_give(friends, gifts, give): # give 리스트 구성
-    friend_cnt = len(friends)
-    for i in range(friend_cnt):
-        for j in range(friend_cnt):
-            if i == j : continue
-            
-            give[i][j] = gifts.count(f"{friends[i]} {friends[j]}")
+def cal_give(friends, gifts, give): # give 리스트 구성 
+    # 바꾼 이후 시간복잡도 변화: f^2*g -> g 
+    
+    # idx: 각 이름에 따른 give 내 첫 번째 인덱스 (행 순서)
+    # enumerate: 리스트에서 인덱스, 값 반환
+    idx = {name: i for i, name in enumerate(friends)}
+    
+    for record in gifts:
+        giver, receiver = record.split() # 공백 기준으로 나눠 준 사람, 받은 사람
+        give[idx[giver]][idx[receiver]] += 1 # 이름에 해당하는 인덱스 찾아가 +1
             
             
 def solution(friends, gifts):
@@ -95,12 +98,16 @@ def solution(friends, gifts):
             
             if give[i][j] > give[j][i]: # i친구가 더 많이 줌
                 will_receive += 1
-            elif not(give[j][i] > give[i][j]) and give[i][i] > give[j][j]: # i친구 선물지수가 더 큼
+                
+            # not(give[j][i]~) 는 give[i][j] == give[j][i]와 같은 의미가 됨. -> 가독성 개선
+            elif give[i][j] == give[j][i] and give[i][i] > give[j][j]: # i친구 선물지수가 더 큼
                 will_receive += 1
         
         max_gift = max(max_gift, will_receive)
         
     return max_gift
+
+# 최종 시간 복잡도 변화: f^2 * g -> f^2 + g
 
 f1 = ["muzi", "ryan", "frodo", "neo"]
 g1 = ["muzi frodo", "muzi frodo", "ryan muzi", "ryan muzi", "ryan muzi", "frodo muzi", "frodo ryan", "neo muzi"]
