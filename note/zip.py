@@ -6,3 +6,15 @@ zip() -> 튜플, 리스트 등을 같은 인덱스끼리 묶어 동시 순회
 # 사용 사례 - 유연근무제
 
 # 연습
+# 두 리스트의 원소를 서로 곱한 결과 리스트를 반환
+a = list(map(int, input().split()))
+b = list(map(int, input().split()))
+
+def sol(a, b):
+    res = []
+    for i, j in zip(a, b):
+        res.append(i*j)
+        
+    return res
+
+print(sol(a, b))
