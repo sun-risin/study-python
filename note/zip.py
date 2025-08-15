@@ -18,3 +18,7 @@ def sol(a, b):
     return res
 
 print(sol(a, b))
+
+# 리스트 컴프리헨션으로 더 간단히 가능하다 알려줌
+def gpt_sol(a, b):
+    return [i*j for i, j in zip(a, b)]
