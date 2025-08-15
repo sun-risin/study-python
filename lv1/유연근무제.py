@@ -75,3 +75,44 @@ start2 = 1
 
 print(f'res1: {solution(sch1, log1, start1)}')
 print(f'res2: {solution(sch2, log2, start2)}')
+
+
+
+# gpt가 코드리뷰 해줌
+def to_minutes(t):
+    return (t // 100) * 60 + (t % 100)
+
+def gpt_check_workTime(sch, log):
+    return to_minutes(log) - to_minutes(sch) <= 10
+
+def gpt_solution(schedules, timelogs, startday):
+    weekend = {(6 - startday) % 7, (7 - startday) % 7}
+    prize = 0
+    
+    for sch, logs in zip(schedules, timelogs): # 동일 인덱스끼리 묶여 순회
+        if all(i in weekend or gpt_check_workTime(sch, log) for i, log in enumerate(logs)):
+            prize += 1
+    return prize
+
+"""
+gpt_check_workTime 내에서 분 변환을 따로 함수로 뺌 (가독성 높임)
+
+gpt_solution 내부
+    weekend 집합을 만들어서 주말인 날짜를 묶어 관리
+    
+    zip() -> 튜플, 리스트 등을 같은 인덱스끼리 묶어 동시 순회 / 반환: 튜플 형태
+        => schedule에 쓸 i가 불필요해짐, 생략 가능
+        => sch: 한 직원의 희망 시각, 정수 / logs: 해당 직원의 출근 기록, 1차 정수 리스트
+        
+    all() -> 괄호 안 내용 모두 True일 때 True.
+        주말일 땐 그냥 통과, 이외에는 gpt_check_workTime->true여야 함
+        
+    enumerate() -> 리스트 인덱스 순으로 인덱스, 값 튜플 반환함
+        logs 내 인덱스 -> 출근 일차 -> i, 주말인지 확인할 때 쓰임
+        logs 값 -> 출근 기록 -> sch 함께 gpt_check_workTime 매개변수
+
+변화: 가독성 개선
+"""
+
+print(f'gpt_res1: {gpt_solution(sch1, log1, start1)}')
+print(f'gpt_res2: {gpt_solution(sch2, log2, start2)}')
