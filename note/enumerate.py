@@ -16,3 +16,7 @@ def sol(s):
             
     return res
 print(sol(s))
+
+# 한줄로 구현 가능하다 알려줌 ㅎ...
+def gpt_sol(s):
+    return [i for i, c in enumerate(s) if c.isupper()]
