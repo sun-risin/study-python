@@ -46,23 +46,25 @@ attacks for O(n)
 
 def solution(bandage, health, attacks):
     answer = health
+    bef_attack = 0
     
-    # 첫 어택
-    answer -= attacks[0][1]
-    if answer <= 0 : return -1 # 0 이하되면 -1 return
-    bef_attack = attacks[0][0]
-    del attacks[0]
+    # # 첫 어택 -> 불필요해짐 (bef_attack = 0)
+    # answer -= attacks[0][1]
+    # if answer <= 0 : return -1 # 0 이하되면 -1 return
+    # bef_attack = attacks[0][0]
+    # del attacks[0]
     
     # 어택 차례대로 진행
-    for attack in attacks:
-        interval = attack[0] - bef_attack - 1
-        answer += (interval * bandage[1]) + ((interval // bandage[0]) * bandage[2]) # 공격 없는 동안 회복
-        if answer > health: answer = health # 최대 체력은 못 넘김
+    for time, damage in attacks: # 언패킹으로 가독성 높임
+        interval = time - bef_attack - 1
+        if interval > 0:
+            answer += (interval * bandage[1]) + ((interval // bandage[0]) * bandage[2]) # 공격 없는 동안 회복
+            if answer > health: answer = health # 최대 체력은 못 넘김
         
-        answer -= attack[1] # 공격 받아서 깎임        
+        answer -= damage # 공격 받아서 깎임        
         if answer <= 0 : return -1 # 0 이하되면 -1 return
         
-        bef_attack = attack[0]
+        bef_attack = time
         
     return answer
 
