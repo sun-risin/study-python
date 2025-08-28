@@ -73,3 +73,19 @@ k2 = 3
 
 print(solution(id1, rep1, k1))
 print(solution(id2, rep2, k2))
+
+
+# 프로그래머스 참고 -> O(n+m) (내 것은 O(n^2)...)
+def solution2(id_list, report, k):
+    answer = {x : 0 for x in id_list}  
+    reports = {x : 0 for x in id_list}
+
+    for r in set(report):
+        reports[r.split()[1]] += 1
+
+    for r in set(report):
+        rep, vic = r.split()
+        if reports[vic] >= k:
+             answer[rep] += 1
+
+    return list(answer.values())
